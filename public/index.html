@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MongoDB Migration Studio</title>
+<link rel="icon" href="data:," />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<header>
+  <h1>MongoDB Migration Studio</h1>
+  <p>Copy collections between any two MongoDB servers. <span id="server-info" class="host"></span></p>
+</header>
+
+<nav class="steps">
+  <button class="step active" data-step="1">1 · Connections</button>
+  <button class="step" data-step="2">2 · Source</button>
+  <button class="step" data-step="3">3 · Mapping</button>
+  <button class="step" data-step="4">4 · Options</button>
+  <button class="step" data-step="5">5 · Run</button>
+</nav>
+
+<main>
+  <section class="panel active" data-panel="1">
+    <h2>Register connections</h2>
+    <form id="connection-form" class="row">
+      <input id="conn-name" type="text" placeholder="Label (e.g. Production)" />
+      <input id="conn-uri" type="password" placeholder="mongodb://user:pass@host:27017" required />
+      <button type="submit">Test &amp; add</button>
+    </form>
+    <p class="hint">Connection strings stay in this local process and are never displayed again.</p>
+    <ul id="connection-list" class="list"></ul>
+    <div class="actions"><button class="next" data-goto="2">Next</button></div>
+  </section>
+
+  <section class="panel" data-panel="2">
+    <h2>Choose servers &amp; databases</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>Source</h3>
+        <label>Server<select id="source-conn"></select></label>
+        <label>Database<select id="source-db"></select></label>
+      </div>
+      <div class="card">
+        <h3>Destination</h3>
+        <label>Server<select id="target-conn"></select></label>
+        <label>Database
+          <input id="target-db" list="target-db-options" placeholder="target database name" />
+          <datalist id="target-db-options"></datalist>
+        </label>
+        <p class="hint">Type a new name to create the database on write.</p>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="back" data-goto="1">Back</button>
+      <button class="next" data-goto="3">Next</button>
+    </div>
+  </section>
+
+  <section class="panel" data-panel="3">
+    <h2>Map collections</h2>
+    <div class="row">
+      <button id="select-all" type="button">Select all</button>
+      <button id="select-none" type="button">Clear</button>
+      <button id="reload-collections" type="button">Reload</button>
+    </div>
+    <table class="mapping">
+      <thead>
+        <tr><th></th><th>Source collection</th><th>Documents</th><th>Target collection</th></tr>
+      </thead>
+      <tbody id="collection-rows"></tbody>
+    </table>
+    <div class="actions">
+      <button class="back" data-goto="2">Back</button>
+      <button class="next" data-goto="4">Next</button>
+    </div>
+  </section>
+
+  <section class="panel" data-panel="4">
+    <h2>Migration options</h2>
+    <div class="card">
+      <label>Write mode
+        <select id="opt-mode">
+          <option value="insert">Insert (skip existing _id)</option>
+          <option value="upsert">Upsert (overwrite matching _id)</option>
+          <option value="drop">Drop target then insert</option>
+        </select>
+      </label>
+      <label>Batch size<input id="opt-batch" type="number" min="1" max="10000" value="1000" /></label>
+      <label class="check"><input id="opt-indexes" type="checkbox" checked /> Copy indexes</label>
+      <label class="check"><input id="opt-continue" type="checkbox" checked /> Continue on error</label>
+    </div>
+    <div class="actions">
+      <button class="back" data-goto="3">Back</button>
+      <button class="next" data-goto="5">Review</button>
+    </div>
+  </section>
+
+  <section class="panel" data-panel="5">
+    <h2>Review &amp; run</h2>
+    <pre id="summary" class="summary"></pre>
+    <div class="row">
+      <button id="start-job" type="button" class="primary">Start migration</button>
+      <button id="cancel-job" type="button" disabled>Cancel</button>
+      <span id="job-status" class="badge"></span>
+    </div>
+    <div id="job-errors" class="errors" hidden></div>
+    <div id="job-overall" class="task overall" hidden></div>
+    <div id="progress-list"></div>
+    <pre id="job-log" class="log"></pre>
+    <div class="actions"><button id="start-over" type="button">Start over</button></div>
+  </section>
+</main>
+
+<div id="toast" class="toast"></div>
+<script src="app.js"></script>
+</body>
+</html>

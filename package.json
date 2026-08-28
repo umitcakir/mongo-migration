@@ -1,0 +1,53 @@
+{
+  "name": "mongo-migration",
+  "version": "1.0.0",
+  "description": "Cross-server MongoDB collection migration tool with a local web UI wizard",
+  "type": "commonjs",
+  "main": "src/index.js",
+  "bin": {
+    "mongo-migration": "src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/umitcakir/mongo-migration.git"
+  },
+  "bugs": {
+    "url": "https://github.com/umitcakir/mongo-migration/issues"
+  },
+  "homepage": "https://github.com/umitcakir/mongo-migration#readme",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "node --test",
+    "build": "pkg . --out-path dist",
+    "build:linux": "pkg . --targets node22-linux-x64 --out-path dist",
+    "build:win": "pkg . --targets node22-win-x64 --out-path dist",
+    "build:macos": "pkg . --targets node22-macos-x64,node22-macos-arm64 --out-path dist"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "mongodb": "^6.13.0",
+    "open": "^8.4.2"
+  },
+  "devDependencies": {
+    "@yao-pkg/pkg": "^6.3.0"
+  },
+  "pkg": {
+    "assets": [
+      "public/**/*",
+      "node_modules/mongodb/**/*.js",
+      "node_modules/bson/**/*.js"
+    ],
+    "targets": [
+      "node22-linux-x64",
+      "node22-win-x64",
+      "node22-macos-x64",
+      "node22-macos-arm64"
+    ],
+    "outputPath": "dist"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT"
+}
